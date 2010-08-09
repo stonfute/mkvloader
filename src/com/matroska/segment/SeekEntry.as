@@ -5,14 +5,13 @@
 	import com.matroska.segment.*;
 	import com.matroska.utils.ByteUtils;
 
-	public class SeekHeader extends EBMLElement
+	public class SeekEntry extends EBMLElement
 	{
-		public var seeks:Vector.<SeekEntry >  = new Vector.<SeekEntry >   ;
-		private var MKV:MKVFile;
+		public var vSeekID:uint;
+		public var vSeekPosition:uint;
 
-		public function SeekHeader(MKV:MKVFile, pos:uint)
+		public function SeekEntry(MKV:MKVFile, pos:uint)
 		{
-			this.MKV = MKV;
 			readTag(MKV.buffer, pos);
 		}
 
@@ -35,13 +34,19 @@
 
 				switch (cTagId)
 				{
-					case Seek :
-						ptr.position = initialPos;
-						trace("\tMeta Seek : ");
-						seeks.push(new SeekEntry(MKV, initialPos));
+					case SeekID :
+						this.vSeekID = ByteUtils.readUInt(ptr,cTagSize);
+						trace("\t\tSeekID : " + this.vSeekID);
 						break;
+
+					case SeekPosition :
+						this.vSeekPosition = ByteUtils.readUInt(ptr,cTagSize);
+						trace("\t\tSeekPosition : " + this.vSeekPosition);
+						break;
+
+
 					default :
-						trace("\tIgnored tag ID in Seek Header : " + cTagId.toString(16));
+						trace("\t\tIgnored tag ID in Seek Entry : " + cTagId.toString(16));
 						ptr.position +=  cTagSize;
 						break;
 				}

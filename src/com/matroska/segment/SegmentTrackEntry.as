@@ -23,11 +23,14 @@
 		public var defaultDuration:uint;
 		public var language:String = "eng";
 		public var name:String;
-		public var video:uint;
-		public var audio:uint;
-
+		public var video:TrackVideo;
+		public var audio:TrackAudio;
+		
+		private var MKV:MKVFile;
+		
 		public function SegmentTrackEntry(MKV:MKVFile, pos:uint)
 		{
+			this.MKV = MKV;
 			readTag(MKV.buffer, pos);
 		}
 
@@ -116,12 +119,14 @@
 						trace("\t\tName : " + this.name);
 						break;
 					case Video :
-						trace("\t\tVideo Track Info (Skipped)");
-						ptr.position +=  cTagSize;
+						trace("\t\tVideo :");
+						ptr.position = initialPos;
+						video = new TrackVideo(MKV, ptr.position);
 						break;
 					case Audio :
-						trace("\t\tAudio Track Info (Skipped)");
-						ptr.position +=  cTagSize;
+						trace("\t\tAudio :");
+						ptr.position = initialPos;
+						audio = new TrackAudio(MKV, ptr.position);
 						break;
 					default :
 						trace("\t\tIgnored tag ID in Track Entry : " + cTagId.toString(16));

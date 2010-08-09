@@ -5,12 +5,12 @@
 	import com.matroska.segment.*;
 	import com.matroska.utils.ByteUtils;
 
-	public class SeekHeader extends EBMLElement
+	public class Attachment extends EBMLElement
 	{
-		public var seeks:Vector.<SeekEntry >  = new Vector.<SeekEntry >   ;
+		public var attachedFiles:Vector.<AttachedFileEntry>  = new Vector.<AttachedFileEntry>   ;
 		private var MKV:MKVFile;
 
-		public function SeekHeader(MKV:MKVFile, pos:uint)
+		public function Attachment(MKV:MKVFile, pos:uint)
 		{
 			this.MKV = MKV;
 			readTag(MKV.buffer, pos);
@@ -35,13 +35,13 @@
 
 				switch (cTagId)
 				{
-					case Seek :
+					case AttachedFile :
 						ptr.position = initialPos;
-						trace("\tMeta Seek : ");
-						seeks.push(new SeekEntry(MKV, initialPos));
+						trace("\tAttachments : ");
+						attachedFiles.push(new AttachedFileEntry(MKV, initialPos));
 						break;
 					default :
-						trace("\tIgnored tag ID in Seek Header : " + cTagId.toString(16));
+						trace("\tIgnored tag ID in Attachments : " + cTagId.toString(16));
 						ptr.position +=  cTagSize;
 						break;
 				}
