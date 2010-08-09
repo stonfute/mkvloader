@@ -8,9 +8,9 @@
 	public final class Segment extends EBMLElement {;
 	
 	//public var clusters:Vector.<Clusters> = new Vector.<Clusters>;
-	//public var seekHeaders:Vector.<SeekHeader> = new Vector.<SeekHeader>;
+	public var seekHeaders:Vector.<SeekHeader> = new Vector.<SeekHeader>;
 	
-	//public var attachments:Attachments = null;
+	public var attachments:Attachment = null;
 	//public var chapters:Chapters = null;
 	//public var cues:Cues = null;
 	public var info:SegmentInfo;
@@ -50,7 +50,8 @@
 			{
 				case SeekHead :
 					trace("Seek Header - " + cTagSize + " bytes");
-					ptr.position +=  cTagSize;
+					ptr.position = initialPos;
+					seekHeaders.push(new SeekHeader(MKV, initialPos));
 					break;
 				case VOID :
 					trace("VOID - " + cTagSize + " bytes");
@@ -72,7 +73,8 @@
 					break;
 				case Attachments :
 					trace("Attachments - " + cTagSize + " bytes");
-					ptr.position +=  cTagSize;
+					ptr.position = initialPos;
+					attachments = new Attachment(MKV, initialPos);
 					break;
 				case Cluster :
 					trace("Cluster - " + cTagSize + " bytes");

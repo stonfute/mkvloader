@@ -125,7 +125,7 @@
 		protected static const Audio:uint = 0xe1;
 		protected static const SamplingFrequency:uint = 0xb5;
 		protected static const OutputSamplingFrequency:uint = 0x78b5;
-		protected static const Channels:uint = 0x94;
+		protected static const Channels:uint = 0x9f;
 		//protected static const ChannelPositions:uint = 0x7d7b;
 		protected static const BitDepth:uint = 0x6264;
 		protected static const ContentEncodings:uint = 0x6d80;
