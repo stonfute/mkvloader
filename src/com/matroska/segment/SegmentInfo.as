@@ -20,7 +20,7 @@
 		public var chapterTranslate:ChapterTranslate;
 											|-> public var chapterTranslateEditionUID:uint;
 											|->public var chapterTranslateCodec:uint;
-											`->public var chapterTranslateID:uint;
+											|->public var chapterTranslateID:uint;
 		public var dateUTC:Date;
 		*/
 
@@ -35,6 +35,7 @@
 		{
 			readTag(MKV.buffer, pos);
 		}
+		
 		override protected function readTag(ptr:ByteArray, pos:uint):void
 		{
 			var readData:Number = 0;

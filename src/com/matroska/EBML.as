@@ -79,7 +79,7 @@
 	}
 
 
-	public function toString()
+	public function toString():String
 	{
 		return "EBML Header :\n" +
 		"Version : " + version + "\n" +

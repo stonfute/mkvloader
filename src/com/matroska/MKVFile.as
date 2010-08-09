@@ -6,7 +6,7 @@
 	{
 
 		public var buffer:ByteArray = null;
-		public var EBMLs:Vector.<EBML >  = new Vector.<EBML >   ;
+		public var Segments:Vector.<Segment>  = new Vector.<Segment>;
 
 		public function MKVFile(mkvFile:ByteArray)
 		{

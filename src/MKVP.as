@@ -17,17 +17,17 @@
 		private var MKV:MKVFile = null;
 		
 		public function MKVP() {
-			urlRequest.url = "C:\\users\\windows\\downloads\\[HorribleSubs] Fairy Tail - 33 [480p].mkv";
+			urlRequest.url = "asset/MKVSample.mkv";
 			urlStream.addEventListener(ProgressEvent.PROGRESS, readBuffer);
 			urlStream.addEventListener(Event.COMPLETE, fileLoaded);
 			urlStream.load(urlRequest);
 		}
 		
-		private function readBuffer(e:Event) {
-			
+		private function readBuffer(e:Event):void {
+			//TODO : Handle Streaming mode
 		}
 		
-		private function fileLoaded(e:Event) {
+		private function fileLoaded(e:Event):void {
 			urlStream.readBytes(mkvFile, mkvFile.length);
 			MKV = new MKVFile(mkvFile);
 			trace(mkvFile.length);
