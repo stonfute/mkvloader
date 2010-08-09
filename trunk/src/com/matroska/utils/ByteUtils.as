@@ -3,7 +3,10 @@
 	import flash.utils.ByteArray;
 	import com.matroska.*;
 	import com.matroska.segment.*;
-	public final class ByteUtils {;
+	
+	//TODO : Use fastmem to use alchemy opcodes
+	
+	public final class ByteUtils {
 
 	public static function readUInt(ptr:ByteArray, len:uint):Number
 	{
