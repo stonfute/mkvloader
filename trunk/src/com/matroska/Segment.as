@@ -12,7 +12,7 @@
 	
 	public var attachments:Attachment = null;
 	//public var chapters:Chapters = null;
-	//public var cues:Cues = null;
+	public var cue:CueHeader = null;
 	public var info:SegmentInfo;
 	//public var tags:Tags = null;
 	public var tracks:SegmentTracks = null;
@@ -64,7 +64,8 @@
 					break;
 				case Cues :
 					trace("Cues - " + cTagSize + " bytes");
-					ptr.position +=  cTagSize;
+					ptr.position = initialPos;
+					cue = new CueHeader(MKV, initialPos);
 					break;
 				case Tracks :
 					trace("Tracks - " + cTagSize + " bytes");
