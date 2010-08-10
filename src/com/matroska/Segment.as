@@ -7,7 +7,7 @@
 	
 	public final class Segment extends EBMLElement {;
 	
-	//public var clusters:Vector.<Clusters> = new Vector.<Clusters>;
+	public var clusters:Vector.<ClusterHeader> = new Vector.<ClusterHeader>;
 	public var seekHeaders:Vector.<SeekHeader> = new Vector.<SeekHeader>;
 	
 	public var attachments:Attachment = null;
@@ -79,7 +79,8 @@
 					break;
 				case Cluster :
 					trace("Cluster - " + cTagSize + " bytes");
-					ptr.position +=  cTagSize;
+					ptr.position = initialPos;
+					clusters.push(new ClusterHeader(MKV, initialPos));
 					break;
 				case Chapters :
 					trace("Chapters - " + cTagSize + " bytes");
