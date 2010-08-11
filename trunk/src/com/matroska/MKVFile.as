@@ -45,6 +45,7 @@
 			System.gc();
 			System.gc();
 			ns.togglePause();
+			MKVP.INSTANCE.stage.frameRate = 5; 
 
 		}
 		

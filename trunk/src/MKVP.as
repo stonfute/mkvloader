@@ -78,6 +78,7 @@
 			} catch (e:Error) {
 				
 			}
+			
 			trace("Started Parsing");
 			System.gc();
 			System.gc();
