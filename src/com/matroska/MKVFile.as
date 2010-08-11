@@ -30,7 +30,7 @@
             ns.client = new Object();
             myVideo.attachNetStream(ns);
 			ns.play(null);
-			ns.togglePause();
+			
 
 			var ebml:EBML = new EBML(this,buffer.position);
 			var segment:Segment = new Segment(this,buffer.position);
@@ -44,7 +44,7 @@
 			new Object();
 			System.gc();
 			System.gc();
-			ns.togglePause();
+			
 			MKVP.INSTANCE.stage.frameRate = 5; 
 			//var fr:FileReference = new FileReference();
 			//fr.save(flvBuffer, "test.flv");

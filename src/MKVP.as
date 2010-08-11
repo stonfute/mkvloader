@@ -33,9 +33,10 @@
 		
 		public function MKVP() {
 			INSTANCE = this;
+			stage.frameRate = 1000;
 			tf.autoSize = TextFieldAutoSize.CENTER;
 			tf.textColor = 0xFFFFFF;
-			tf.htmlText = "<p align='center'>Click anywhere to load a MKV file (For now LIMITED TO AVC VIDEO ONLY, SUPPORT FOR OTHER MKV SOON) !\nNo Audio, no Subtitle, they'll be added soon !\nCoded by JesusYamato.\nThis is only an experimental and proof of concept project, this will be implemented in a real player soon !\nIf you wish to contribute : http://googlecode.com/p/mkvloader</p>";
+			tf.htmlText = "<p align='center'>Click anywhere to load a MKV file (For now LIMITED TO AVC VIDEO ONLY, SUPPORT FOR OTHER MKV SOON) !\nNo Audio, no Subtitle, they'll be added soon !\nCoded by JesusYamato.\nThis is only an experimental and proof of concept project, this will be implemented in a real player soon !\nIf you wish to contribute : http://googlecode.com/p/mkvloader\nEnjoy the voodoo magic ;)</p>";
 			tf.x = (stage.stageWidth-tf.width)/2;
 			tf.y = (stage.stageHeight-tf.height)/2;
 			addChild(tf);
