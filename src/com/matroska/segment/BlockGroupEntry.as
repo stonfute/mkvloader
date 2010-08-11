@@ -10,12 +10,21 @@
 		public var vBlock:ByteArray;
 		public var vBlockDuration:uint;
 		public var vReferencePriority:uint;
-		public var vReferenceBlock:uint;
+		public var vReferenceBlock:int;
 
+		public var keyframe:Boolean = true;
+		public var track:uint = 0;
+		public var pTimecode:uint;
+		public var timecode:uint = 0;
+		public var dPos:uint = 0;
+		public var dSize:uint = 0;
+		
+		
 		private var MKV:MKVFile;
 
-		public function BlockGroupEntry(MKV:MKVFile, pos:uint)
+		public function BlockGroupEntry(MKV:MKVFile, pos:uint, pTimecode:uint)
 		{
+			this.pTimecode = pTimecode;
 			this.MKV = MKV;
 			readTag(MKV.buffer, pos);
 		}
@@ -42,7 +51,31 @@
 					case Block :
 
 						trace("\t\tBlock : " + cTagSize + "bytes");
-						ptr.position +=  cTagSize;
+
+						var leadingBits:uint = ptr[ptr.position];
+						var trackIDSize:uint;
+
+						if (leadingBits >= 128)
+						{
+							//PoC code, only here temporary
+							if ((leadingBits&0x7F) == 1) { //Will only play track 1
+								
+								ptr.position++;
+								track = 1;
+								timecode = ByteUtils.readSInt(ptr, 2);
+								ptr.position++;
+								trace("\t\t\tTimecode : " + timecode);
+								
+								dPos = ptr.position;
+								dSize = cTagSize - 3;
+								
+								ptr.position +=  cTagSize - 4;
+							} else {								
+								ptr.position +=  cTagSize ;
+							}
+						} else {
+							ptr.position +=  cTagSize ;
+						}
 
 						break;
 
@@ -57,8 +90,9 @@
 						break;
 
 					case ReferenceBlock :
-						this.vReferenceBlock = ByteUtils.readUInt(ptr,cTagSize);
+						this.vReferenceBlock = ByteUtils.readSInt(ptr,cTagSize);
 						trace("\t\tReferenceBlock : " + this.vReferenceBlock);
+						this.keyframe = false;
 						break;
 
 
@@ -67,9 +101,14 @@
 						ptr.position +=  cTagSize;
 						break;
 				}
+				
 
+				
 				readData +=  ptr.position - initialPos;
 
+			}
+			if (track == 1) { //Add to FLV Buffer
+				MKV.appendFrame(0x09, dSize, timecode + pTimecode, dPos, keyframe);
 			}
 		}
 	}

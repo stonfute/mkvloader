@@ -53,7 +53,52 @@
 				break;
 		}
 	}
+	
+	public static function readSInt(ptr:ByteArray, len:uint):Number
+	{
 
+		switch (len)
+		{
+			case 1 :
+				return ptr.readByte();
+				break;
+
+			case 2 :
+				return ptr.readShort();
+				break;
+
+			case 3 :
+				ptr.position--;
+				return ptr.readInt() & 0x00FFFFFF;
+				break;
+
+			case 4 :
+				return ptr.readInt();
+				break;
+
+			case 5 :
+				return ptr.readByte() * 4294967296 + ptr.readInt();
+				break;
+
+			case 6 :
+				return ptr.readShort() * 4294967296 + ptr.readInt();
+				break;
+
+			case 7 :
+				ptr.position +=  1;
+				return ptr.readShort() * 4294967296 + ptr.readInt();
+				break;
+
+			case 8 :
+				ptr.position +=  2;
+				return ptr.readShort() * 4294967296.0 + (Number)(ptr.readInt());
+				break;
+
+			default :
+				throw new Error("Unsigned Integer bigger than 48bits aren't supported, blame as3. No matroska file would have data that big (255TB) for at least the next 20 years to come.");
+				break;
+		}
+	}
 	public static function readStr(ptr:ByteArray, len:uint):String
 	{
 		return ptr.readUTFBytes(len);
