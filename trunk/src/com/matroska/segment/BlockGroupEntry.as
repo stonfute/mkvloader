@@ -67,7 +67,7 @@
 								trace("\t\t\tTimecode : " + timecode);
 								
 								dPos = ptr.position;
-								dSize = cTagSize - 3;
+								dSize = cTagSize - 4;
 								
 								ptr.position +=  cTagSize - 4;
 							} else {								
@@ -92,7 +92,11 @@
 					case ReferenceBlock :
 						this.vReferenceBlock = ByteUtils.readSInt(ptr,cTagSize);
 						trace("\t\tReferenceBlock : " + this.vReferenceBlock);
-						this.keyframe = false;
+						if (this.vReferenceBlock != 0) {
+							this.keyframe = false;
+						} else {
+							trace("Ref 0, keyframe");
+						}
 						break;
 
 

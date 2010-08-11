@@ -46,6 +46,8 @@
 			System.gc();
 			ns.togglePause();
 			MKVP.INSTANCE.stage.frameRate = 5; 
+			//var fr:FileReference = new FileReference();
+			//fr.save(flvBuffer, "test.flv");
 
 		}
 		
@@ -106,10 +108,10 @@
 				
 				lastSize = bodySize;
 			}
-			//if (flvBuffer.position >= 1024*1024*10) {
+			if (flvBuffer.position >= 1024*1024*10) {
 				ns.appendBytes(flvBuffer);
 				flvBuffer.clear();
-			//}
+			}
 			
 		}
 
