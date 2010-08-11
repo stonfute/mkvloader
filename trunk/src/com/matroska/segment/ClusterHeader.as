@@ -58,13 +58,41 @@
 
 					case SimpleBlock :
 						trace("\tSimpleBlock : " + cTagSize + "bytes");
-						ptr.position +=  cTagSize;
+						
+
+						var leadingBits:uint = ptr[ptr.position];
+						var trackIDSize:uint;
+
+						if (leadingBits >= 128)
+						{
+							//PoC code, only here temporary
+							if ((leadingBits&0x7F) == 1) { //Will only play track 1
+								ptr.position++;
+								var rTs:uint = ByteUtils.readSInt(ptr, 2);
+								trace("\t\tTimecode : " + rTs);
+								var flags:uint = ptr.readUnsignedByte();
+								var keyframe:Boolean = false;
+								if (flags&0x80) {
+									keyframe = true;
+								}
+								//Add to FLV Buffer
+								
+								MKV.appendFrame(0x09, cTagSize - 4, this.vTimecode + rTs, ptr.position, keyframe);
+								
+								ptr.position +=  cTagSize - 4 ;
+							} else {
+								ptr.position +=  cTagSize ;
+							}
+						} else {
+							ptr.position +=  cTagSize ;
+						}
+						
 						break;
 
 					case BlockGroup :
 						trace("\tBlockGroup : ");
 						ptr.position = initialPos;
-						this.vBlockGroup.push(new BlockGroupEntry(MKV, initialPos));
+						this.vBlockGroup.push(new BlockGroupEntry(MKV, initialPos, this.vTimecode));
 						break;
 
 					default :

@@ -103,6 +103,9 @@
 						break;
 					case CodecPrivate :
 						this.codecPrivate = new ByteArray();
+						if (this.trackNumber == 1) {
+							MKV.startFrame(0x09, cTagSize, 0, ptr.position);
+						}
 						ptr.readBytes(this.codecPrivate, 0, cTagSize);
 						trace("\t\tCodec Private : " + this.codecPrivate);
 						break;
