@@ -30,18 +30,16 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case SeekID :
 						this.vSeekID = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\t\tSeekID : " + this.vSeekID);
 						break;
 
 					case SeekPosition :
 						this.vSeekPosition = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\t\tSeekPosition : " + this.vSeekPosition);
 						break;
 
 

@@ -31,13 +31,12 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case AttachedFile :
 						ptr.position = initialPos;
-						trace("\tAttachments : ");
 						attachedFiles.push(new AttachedFileEntry(MKV, initialPos));
 						break;
 					default :

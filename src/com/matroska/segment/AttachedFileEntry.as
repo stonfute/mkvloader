@@ -11,7 +11,10 @@
 		public var vFileDescription:String;
 		public var vFileName:String;
 		public var vFileMimeType:String;
-		public var vFileData:ByteArray;
+		
+		public var dPos:uint;
+		public var dSize:uint;
+		
 		public var vFileUID:uint;
 
 		public function AttachedFileEntry (MKV:MKVFile, pos:uint)
@@ -34,34 +37,30 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case FileDescription :
 						this.vFileDescription = ByteUtils.readStr(ptr,cTagSize);
-						trace("\t\t\tFileDescription : " + this.vFileDescription);
 						break;
 
 					case FileName :
 						this.vFileName = ByteUtils.readStr(ptr,cTagSize);
-						trace("\t\t\tFileName : " + this.vFileName);
 						break;
 
 					case FileMimeType :
 						this.vFileMimeType = ByteUtils.readStr(ptr,cTagSize);
-						trace("\t\t\tFileMimeType : " + this.vFileMimeType);
 						break;
 
 					case FileData :
-
-						trace("\t\t\tFileData is " + cTagSize + "bytes");
+						dPos = ptr.position;
+						dSize = cTagSize;
 						ptr.position +=  cTagSize;
 						break;
 
 					case FileUID :
 						this.vFileUID = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\t\t\tFileUID : " + this.vFileUID);
 						break;
 
 					default :

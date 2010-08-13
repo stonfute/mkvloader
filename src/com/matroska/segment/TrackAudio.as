@@ -11,7 +11,6 @@
 		public var vOutputSamplingFrequency:Number;
 		public var vChannels:uint = 1;
 		public var vBitDepth:uint;
-		//public var vChannelPositions:ByteArray;
 
 		public function TrackAudio(MKV:MKVFile, pos:uint)
 		{
@@ -33,34 +32,24 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case SamplingFrequency :
 						this.vSamplingFrequency = ByteUtils.readFNum(ptr,cTagSize);
-						trace("\t\t\tSamplingFrequency : " + this.vSamplingFrequency);
 						break;
 
 					case OutputSamplingFrequency :
 						this.vOutputSamplingFrequency = ByteUtils.readFNum(ptr,cTagSize);
-						trace("\t\t\tOutputSamplingFrequency : " + this.vOutputSamplingFrequency);
 						break;
 
 					case Channels :
 						this.vChannels = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\t\t\tChannels : " + this.vChannels);
 						break;
-						/*
-						case ChannelPositions :
-						this.vChannelPositions = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\t\t\tChannelPositions : " + this.vChannelPositions);
-						break;
-						*/
 
 					case BitDepth :
 						this.vBitDepth = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\t\t\tBitDepth : " + this.vBitDepth);
 						break;
 
 					default :

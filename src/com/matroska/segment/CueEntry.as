@@ -1,4 +1,4 @@
-package com.matroska.segment
+﻿package com.matroska.segment
 {
 	import flash.utils.ByteArray;
 	import com.matroska.*;
@@ -34,17 +34,15 @@ package com.matroska.segment
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case CueTime:
-						this.vCueTime = ByteUtils.readUInt(ptr, cTagSize)
-						trace("\t\tCueTime : " + this.vCueTime);
+						this.vCueTime = ByteUtils.readUInt(ptr, cTagSize);
 						break;
 					case CueTrackPositions:
 						ptr.position = initialPos;
-						trace("\t\tCue Track Position : ");
 						this.vCueTrackPositions = new CueTrackPosition(MKV, initialPos);
 						break;
 					default :

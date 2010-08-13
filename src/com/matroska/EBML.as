@@ -33,14 +33,7 @@
 			var cTagId:uint = getTagID(ptr,initialPos);
 			var cTagSize:Number = 0;
 
-			readData +=  ptr.position - initialPos;
-
-			initialPos = ptr.position;
-
-			cTagSize = getDataSize(ptr,initialPos);
-
-			readData +=  ptr.position - initialPos;
-			initialPos = ptr.position;
+			cTagSize = getEBMLValue(ptr,ptr.position);
 
 			switch (cTagId)
 			{
@@ -68,12 +61,11 @@
 					break;
 				default :
 					trace("Unknow tag ID in EBML Header : " + cTagId.toString(16));
+					ptr.position +=  cTagSize;
 					break;
 			}
-
-
-			readData +=  cTagSize;
-
+			
+			readData +=  ptr.position - initialPos;
 
 		}
 	}

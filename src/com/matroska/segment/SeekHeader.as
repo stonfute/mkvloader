@@ -31,13 +31,12 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case Seek :
 						ptr.position = initialPos;
-						trace("\tMeta Seek : ");
 						seeks.push(new SeekEntry(MKV, initialPos));
 						break;
 					default :
