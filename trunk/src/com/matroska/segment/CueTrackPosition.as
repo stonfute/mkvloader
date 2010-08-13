@@ -32,28 +32,24 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case CueTrack:
-						this.vCueTrack = ByteUtils.readUInt(ptr, cTagSize)
-						trace("\t\t\tCueTrack : " + this.vCueTrack);
+						this.vCueTrack = ByteUtils.readUInt(ptr, cTagSize);
 						break;
 
 					case CueClusterPosition:
-						this.vCueClusterPosition = ByteUtils.readUInt(ptr, cTagSize)
-						trace("\t\t\tCueClusterPosition : " + this.vCueClusterPosition);
+						this.vCueClusterPosition = ByteUtils.readUInt(ptr, cTagSize);
 						break;
 
 					case CueBlockNumber:
-						this.vCueBlockNumber = ByteUtils.readUInt(ptr, cTagSize)
-						trace("\t\t\tCueBlockNumber : " + this.vCueBlockNumber);
+						this.vCueBlockNumber = ByteUtils.readUInt(ptr, cTagSize);
 						break;
 
 					case CueCodecState:
-						this.vCueCodecState = ByteUtils.readUInt(ptr, cTagSize)
-						trace("\t\t\tCueCodecState : " + this.vCueCodecState);
+						this.vCueCodecState = ByteUtils.readUInt(ptr, cTagSize);
 						break;
 
 					default :

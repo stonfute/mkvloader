@@ -1,56 +1,28 @@
 ﻿package com.matroska
 {
 	import flash.utils.ByteArray;
-	import flash.net.FileReference;
-	import flash.media.Video;
-	import flash.net.NetConnection;
-	import flash.net.NetStream;
 	import flash.system.System;
 
 	public class MKVFile
 	{
 
 		public var buffer:ByteArray = null;
-		
-		public var flvBuffer:ByteArray = new ByteArray();
-		private var lastSize:uint = 0;
-		
-		public var Segments:Vector.<Segment>  = new Vector.<Segment>;
-		private var nc:NetConnection = new NetConnection();
-		private var ns:NetStream;
+		public var segment:Segment = null;
+		public var index:Vector.<Frame> = new Vector.<Frame>;
 		
 		public function MKVFile(mkvFile:ByteArray)
 		{
 			buffer = mkvFile;
-			
-			var myVideo:Video = new Video(1280,720); 
-			
-            nc.connect(null);             
-           	ns = new NetStream(nc);
-            ns.client = new Object();
-            myVideo.attachNetStream(ns);
-			ns.play(null);
-			
-
 			var ebml:EBML = new EBML(this,buffer.position);
-			var segment:Segment = new Segment(this,buffer.position);
-			
-			MKVP.INSTANCE.addChild(myVideo);
-          	buffer.clear();
-			buffer = null;
-			Segments = null;
-			new Object();
-			new Object();
-			new Object();
-			System.gc();
-			System.gc();
-			
-			MKVP.INSTANCE.stage.frameRate = 5; 
-			//var fr:FileReference = new FileReference();
-			//fr.save(flvBuffer, "test.flv");
-
+			segment = new Segment(this,buffer.position);
+		
 		}
 		
+		public function update() {
+			segment.update();
+		}
+		
+		/*
 		public function startFrame(type:uint, dSize:uint, timestamp:uint, dPos:uint):void { //Codec private data write
 
 			if (type == 9) { //Video
@@ -114,6 +86,7 @@
 			}
 			
 		}
+		*/
 
 	}
 

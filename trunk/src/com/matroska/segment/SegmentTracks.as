@@ -30,13 +30,12 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
+				cTagSize = getEBMLValue(ptr,ptr.position);
 
 				switch (cTagId)
 				{
 					case TrackEntry:
 						ptr.position = initialPos;
-						trace("\tTrack Entry : ");
 						trackEntries.push(new SegmentTrackEntry(MKV, initialPos));
 						break;
 					default :

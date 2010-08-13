@@ -11,7 +11,6 @@
 		public var tag:uint;
 		public var tagSize:uint;
 		public var dataSize:Number;
-		public var elementOffset:uint;
 
 		protected function readTag(ptr:ByteArray, pos:uint):void
 		{
@@ -83,7 +82,7 @@
 
 		}
 
-		protected function getTagID(ptr:ByteArray, pos:uint):uint
+		protected static function getTagID(ptr:ByteArray, pos:uint):uint
 		{
 
 			var leadingBits:uint = ptr[pos] >> 4;
@@ -111,7 +110,7 @@
 
 		}
 
-		protected function getDataSize(ptr:ByteArray, pos:uint):Number
+		protected static function getEBMLValue(ptr:ByteArray, pos:uint):Number
 		{
 			var leadingBits:uint = ptr[pos];
 

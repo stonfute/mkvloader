@@ -30,6 +30,7 @@
 			/*
 			Process Children
 			*/
+			
 
 			while (readData != dataSize)
 			{
@@ -37,60 +38,45 @@
 				var cTagId:uint = getTagID(ptr,initialPos);
 				var cTagSize:Number = 0;
 
-				cTagSize = getDataSize(ptr,ptr.position);
-
+				cTagSize = getEBMLValue(ptr,ptr.position);
+				
 				switch (cTagId)
 				{
 					case Timecode :
 						this.vTimecode = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\tTimecode : " + this.vTimecode);
 						break;
 
 					case Position :
 						this.vPosition = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\tPosition : " + this.vPosition);
 						break;
 
 					case PrevSize :
 						this.vPrevSize = ByteUtils.readUInt(ptr,cTagSize);
-						trace("\tPrevSize : " + this.vPrevSize);
+						
 						break;
 
 					case SimpleBlock :
-						trace("\tSimpleBlock : " + cTagSize + "bytes");
+					
+						var bTimecode:uint;
+						var bTrackID:uint;
+						var bLacingType:uint;
+						var bKeyFrame:Boolean = false;
+						var bFlag:uint;
+						var bHeaderSize:uint;
+						var cPos:uint = ptr.position;
 						
-
-						var leadingBits:uint = ptr[ptr.position];
-						var trackIDSize:uint;
-
-						if (leadingBits >= 128)
-						{
-							//PoC code, only here temporary
-							if ((leadingBits&0x7F) == 1) { //Will only play track 1
-								ptr.position++;
-								var rTs:uint = ByteUtils.readSInt(ptr, 2);
-								trace("\t\tTimecode : " + rTs);
-								var flags:uint = ptr.readUnsignedByte();
-								var keyframe:Boolean = false;
-								if (flags&0x80) {
-									keyframe = true;
-								}
-								//Add to FLV Buffer
-								
-								MKV.appendFrame(0x09, cTagSize - 4, this.vTimecode + rTs, ptr.position, keyframe);
-								
-								ptr.position +=  cTagSize - 4 ;
-							} else {
-								ptr.position +=  cTagSize ;
-							}
-						} else {
-							ptr.position +=  cTagSize ;
-						}
+						bTrackID = getEBMLValue(ptr, ptr.position);
+						bTimecode = vTimecode + ByteUtils.readSInt(ptr, 2);
+						bFlag = ptr.readUnsignedByte();
+						bKeyFrame = (((bFlag & 0x80)>>7) == 1) ? true : false;
+						bLacingType = (bFlag & 0x06)>>1;
+						bHeaderSize =  ptr.position - cPos;
+						MKV.index.push(new Frame(bTrackID, ptr.position, bHeaderSize, bTimecode, bKeyFrame, bLacingType));
 						
+						ptr.position +=  cTagSize - bHeaderSize ;
 						break;
 
 					case BlockGroup :
-						trace("\tBlockGroup : ");
 						ptr.position = initialPos;
 						this.vBlockGroup.push(new BlockGroupEntry(MKV, initialPos, this.vTimecode));
 						break;
