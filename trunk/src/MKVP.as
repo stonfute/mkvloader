@@ -50,7 +50,7 @@
 			fr.browse([new FileFilter("Matroska File with AVC Video only (*.mkv)", "*.mkv")]);
 			*/
 			removeEventListener(MouseEvent.CLICK, loadFile);
-			urlRequest = new URLRequest("asset/MKVSample.mkv");
+			urlRequest = new URLRequest("asset/MKVSample-strippedHeader.mkv");
 			urlStream = new URLStream();
 			urlStream.addEventListener(ProgressEvent.PROGRESS, readBuffer);
 			urlStream.addEventListener(Event.COMPLETE, fileLoaded);
