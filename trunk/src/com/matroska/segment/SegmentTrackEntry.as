@@ -91,7 +91,8 @@
 						break;
 					case CodecPrivate :
 						this.codecPrivate = new ByteArray();
-						ptr.readBytes(this.codecPrivate, 0, cTagSize);
+						MKV.index.push(new Frame(trackNumber, ptr.position, cTagSize, 0, true, 0, true));
+						ptr.position +=  cTagSize;
 						break;
 					case DefaultDuration :
 						this.defaultDuration = ByteUtils.readUInt(ptr,cTagSize);

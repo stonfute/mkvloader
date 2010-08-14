@@ -95,7 +95,7 @@
 				bTimecode = pTimecode + ByteUtils.readSInt(ptr, 2);
 				bLacingType = (ptr.readUnsignedByte() & 0x06)>>1; //Lacing flag
 				bHeaderSize = ptr.position - cPos;
-				MKV.index.push(new Frame(bTrackID, ptr.position, bHeaderSize, bTimecode, bKeyFrame, bLacingType));
+				MKV.index.push(new Frame(bTrackID, ptr.position, bSize - bHeaderSize, bTimecode, bKeyFrame, bLacingType));
 			}
 			ptr.position = savedPos;
 		}

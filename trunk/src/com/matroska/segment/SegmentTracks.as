@@ -7,14 +7,14 @@
 
 	public class SegmentTracks extends EBMLElement
 	{
-		public var trackEntries:Vector.<SegmentTrackEntry> = new Vector.<SegmentTrackEntry>;
+		public var trackEntries:Vector.<SegmentTrackEntry >  = new Vector.<SegmentTrackEntry >   ;
 		private var MKV:MKVFile;
 		public function SegmentTracks(MKV:MKVFile, pos:uint)
 		{
 			this.MKV = MKV;
 			readTag(MKV.buffer, pos);
 		}
-		
+
 		override protected function readTag(ptr:ByteArray, pos:uint):void
 		{
 			var readData:Number = 0;
@@ -34,7 +34,7 @@
 
 				switch (cTagId)
 				{
-					case TrackEntry:
+					case TrackEntry :
 						ptr.position = initialPos;
 						trackEntries.push(new SegmentTrackEntry(MKV, initialPos));
 						break;
@@ -43,7 +43,32 @@
 						ptr.position +=  cTagSize;
 						break;
 				}
-
+				
+				for each (var trackEntry:SegmentTrackEntry in trackEntries)
+				{
+					if (trackEntry.video != null) { //video track
+						if (MKV.currentVideoTrack == 0) {
+							MKV.currentVideoTrack = trackEntry.trackNumber;
+						} else if (trackEntry.flagDefault) {
+							MKV.currentVideoTrack = trackEntry.trackNumber;
+						}
+						continue;
+					} else if (trackEntry.audio != null) { //audio track
+						if (MKV.currentAudioTrack == 0) {
+							MKV.currentAudioTrack = trackEntry.trackNumber;
+						} else if (trackEntry.flagDefault) {
+							MKV.currentAudioTrack = trackEntry.trackNumber;
+						}
+						continue;
+					} else { //subtitle track
+						if (MKV.currentSubtitleTrack == 0) {
+							MKV.currentSubtitleTrack = trackEntry.trackNumber;
+						} else if (trackEntry.flagDefault) {
+							MKV.currentSubtitleTrack = trackEntry.trackNumber;
+						}
+						continue;
+					}
+				}
 				readData +=  ptr.position - initialPos;
 
 			}

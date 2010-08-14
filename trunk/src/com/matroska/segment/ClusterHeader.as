@@ -71,7 +71,7 @@
 						bKeyFrame = (((bFlag & 0x80)>>7) == 1) ? true : false;
 						bLacingType = (bFlag & 0x06)>>1;
 						bHeaderSize =  ptr.position - cPos;
-						MKV.index.push(new Frame(bTrackID, ptr.position, bHeaderSize, bTimecode, bKeyFrame, bLacingType));
+						MKV.index.push(new Frame(bTrackID, ptr.position, cTagSize - bHeaderSize, bTimecode, bKeyFrame, bLacingType));
 						
 						ptr.position +=  cTagSize - bHeaderSize ;
 						break;
