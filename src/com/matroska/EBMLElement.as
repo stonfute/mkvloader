@@ -110,7 +110,7 @@
 
 		}
 
-		protected static function getEBMLValue(ptr:ByteArray, pos:uint):Number
+		public static function getEBMLValue(ptr:ByteArray, pos:uint):Number
 		{
 			var leadingBits:uint = ptr[pos];
 

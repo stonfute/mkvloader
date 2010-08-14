@@ -19,7 +19,7 @@
 	public class MKVP extends MovieClip {
 		
 		private var MKV:MKVFile = null;
-		//private var fr:FileReference = new FileReference();
+		private var fr:FileReference = new FileReference();
 		
 		private var urlStream:URLStream;
 		private var urlRequest:URLRequest;
@@ -29,7 +29,7 @@
 		
 		public function MKVP() {
 			
-			stage.frameRate = 512.0;
+			stage.frameRate = 24.0;
 			
 			tf.autoSize = TextFieldAutoSize.CENTER;
 			tf.textColor = 0xFFFFFF;
@@ -49,6 +49,7 @@
 			fr.addEventListener(Event.COMPLETE, fileLoaded);
 			fr.browse([new FileFilter("Matroska File with AVC Video only (*.mkv)", "*.mkv")]);
 			*/
+			removeEventListener(MouseEvent.CLICK, loadFile);
 			urlRequest = new URLRequest("asset/MKVSample.mkv");
 			urlStream = new URLStream();
 			urlStream.addEventListener(ProgressEvent.PROGRESS, readBuffer);
@@ -86,15 +87,29 @@
 		private function fileLoaded(e:Event):void {
 			
 			if (urlStream.bytesAvailable > 0) {
+				urlStream.readBytes(buffer, buffer.length);
 				MKV.update();
 			}
 			
+			urlStream.removeEventListener(ProgressEvent.PROGRESS, readBuffer);
+			urlStream.removeEventListener(Event.COMPLETE, fileLoaded);
 			urlStream.close();
 			urlStream = null;
 
 			
 			removeChild(tf);
 			System.gc();
+			
+			var flvFile:ByteArray = new ByteArray();
+			
+			MKV.startFLV(flvFile);
+			
+			for each(var f:Frame in MKV.index) {
+				f.flvInsert(MKV, flvFile);
+			}
+			
+			fr.save(flvFile, "test.flv");
+			
 		}
 		
 	}
