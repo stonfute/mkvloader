@@ -25,6 +25,7 @@
 		public var name:String;
 		public var video:TrackVideo;
 		public var audio:TrackAudio;
+		public var contentEncodings:ContentEncodingHeader;
 		
 		private var MKV:MKVFile;
 		
@@ -110,6 +111,10 @@
 					case Audio :
 						ptr.position = initialPos;
 						audio = new TrackAudio(MKV, ptr.position);
+						break;
+					case ContentEncodings :
+						ptr.position = initialPos;
+						contentEncodings = new ContentEncodingHeader(MKV, ptr.position);
 						break;
 					default :
 						trace("\t\tIgnored tag ID in Track Entry : " + cTagId.toString(16));

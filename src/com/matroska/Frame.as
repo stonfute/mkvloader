@@ -30,7 +30,26 @@
 	private function write(inputBuffer:ByteArray, flvBuffer:ByteArray, type:uint, start:uint, len:uint, ts:uint, track:SegmentTrackEntry):void
 	{
 		var bodySize:uint = 0;
-	
+		
+		var compAlgo:uint = 0xFF;
+		var extraLen:uint = 0;
+		var extraStart:uint = 0;
+		var compressedBuffer:ByteArray;
+		if (!isCodecPrivate) {
+			try {
+				compAlgo = track.contentEncodings.contentEncoding.compressionInfo.compressionAlgo;
+				if (compAlgo == 3) {
+					extraLen = track.contentEncodings.contentEncoding.compressionInfo.compressionSettingsSize;
+					extraStart = track.contentEncodings.contentEncoding.compressionInfo.compressionSettingsStart;
+				} else {
+					compressedBuffer = new ByteArray();
+					compressedBuffer.writeBytes(inputBuffer, inputBuffer.position, len);
+					compressedBuffer.uncompress();
+				}
+			} catch (e:Error) {
+				
+			}
+		}
 		switch (type)
 		{
 			case 0x09 :
@@ -41,7 +60,14 @@
 					
 						
 						flvBuffer.writeByte(0x09); bodySize++;
-						flvBuffer.writeUnsignedInt((len+5)<<8); flvBuffer.position--; bodySize +=  3;
+						
+						if (compAlgo == 0) { //Zlib compressed
+							flvBuffer.writeUnsignedInt((compressedBuffer.length+extraLen+5)<<8); 
+						} else {
+							flvBuffer.writeUnsignedInt((len+extraLen+5)<<8); 
+						}
+						
+						flvBuffer.position--; bodySize +=  3;
 						flvBuffer.writeUnsignedInt((ts)<<8); flvBuffer.position--; bodySize +=  3;
 						flvBuffer.writeByte((ts)>>24); bodySize++;
 						flvBuffer.writeUnsignedInt(0); flvBuffer.position--; bodySize +=  3;
@@ -61,7 +87,23 @@
 						bodySize++;
 						
 						flvBuffer.writeUnsignedInt(0); flvBuffer.position--; bodySize +=  3;
-						flvBuffer.writeBytes(inputBuffer, inputBuffer.position, len); bodySize +=  len; inputBuffer.position += len;
+						
+						if (compAlgo == 3) { //Header Stripped
+							flvBuffer.writeBytes(inputBuffer, extraStart, extraLen);
+							bodySize += extraLen;
+							flvBuffer.writeBytes(inputBuffer, inputBuffer.position, len);
+							bodySize +=  len; 
+							inputBuffer.position += len;
+						}
+						else if (compAlgo == 0) { //zlib compressed frame
+							flvBuffer.writeBytes(compressedBuffer, 0, compressedBuffer.length);
+							bodySize +=  compressedBuffer.length;
+							inputBuffer.position += len;
+						} else { //raw frame
+							flvBuffer.writeBytes(inputBuffer, inputBuffer.position, len);
+							bodySize +=  len;
+							inputBuffer.position += len;
+						}
 						
 						flvBuffer.writeUnsignedInt(bodySize);
 						break;
@@ -78,7 +120,14 @@
 				{
 					case "A_AAC" :
 						flvBuffer.writeByte(0x08); bodySize++;
-						flvBuffer.writeUnsignedInt((len+2)<<8); flvBuffer.position--; bodySize +=  3;
+						
+						if (compAlgo == 0) {
+							flvBuffer.writeUnsignedInt((compressedBuffer.length+2)<<8);
+						} else {
+							flvBuffer.writeUnsignedInt((len+extraLen+2)<<8);
+						}
+						
+						flvBuffer.position--; bodySize +=  3;
 						flvBuffer.writeUnsignedInt((ts)<<8); flvBuffer.position--; bodySize +=  3;
 						flvBuffer.writeByte((ts)>>24); bodySize++;
 						flvBuffer.writeUnsignedInt(0); flvBuffer.position--; bodySize +=  3;
@@ -93,7 +142,24 @@
 							
 						bodySize++;
 						
-						flvBuffer.writeBytes(inputBuffer, inputBuffer.position, len); bodySize +=  len; inputBuffer.position += len;
+
+						if (compAlgo == 3) { //Header Stripped
+							flvBuffer.writeBytes(inputBuffer, extraStart, extraLen);
+							bodySize += extraLen;
+							flvBuffer.writeBytes(inputBuffer, inputBuffer.position, len);
+							bodySize +=  len; 
+							inputBuffer.position += len;
+						}
+						else if (compAlgo == 0) { //zlib compressed frame
+							flvBuffer.writeBytes(compressedBuffer, 0, compressedBuffer.length);
+							bodySize +=  compressedBuffer.length;
+							inputBuffer.position += len
+						} else { //raw frame
+							flvBuffer.writeBytes(inputBuffer, inputBuffer.position, len);
+							bodySize +=  len;
+							inputBuffer.position += len;
+						}
+						
 						
 						flvBuffer.writeUnsignedInt(bodySize);
 						
