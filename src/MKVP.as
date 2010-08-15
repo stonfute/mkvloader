@@ -15,17 +15,47 @@
 	import flash.system.System;
 	import com.matroska.Frame;
 	import flash.utils.getTimer;
-
+	
+	
 	public class MKVP extends MovieClip {
 		
+		private var tf:TextField = new TextField();
+		private var mkvVideo:MatroskaVideo;
 		public function MKVP() {
-			var mkvVideo:MatroskaVideo = new MatroskaVideo("asset/MKVSample.mkv");
+			mkvVideo = new MatroskaVideo("asset/MKVSample.mkv");
+			
+			mkvVideo.addEventListener("MKVDownloaded", proposeDownload);
+			mkvVideo.addEventListener("MKVProgress", downloadProgress);
+			
 			mkvVideo.loadVideo();
 			//mkvVideo.smoothing = true; //Do this only if you're scaling!
 			addChild(mkvVideo);
-			mkvVideo.width = 640;
-			mkvVideo.height = 480;
+			
+			tf.autoSize = TextFieldAutoSize.CENTER;
+			tf.textColor = 0xFFFFFF;
+			tf.x = 0;
+			tf.y = 480+tf.height+20;
+			
+			addChild(tf);
 		}
+		
+		private function downloadProgress(e:ProgressEvent) {
+			
+			tf.text = "Downloading : " + (int)((e.bytesLoaded/e.bytesTotal)*100) + "%";
+			tf.x = 0;
+		}
+		
+		private function proposeDownload(e:Event) {
+			tf.text = "Downloaded ! Click HERE to save the file to your harddisk.";
+			tf.x = 0;
+			tf.addEventListener(MouseEvent.CLICK, downloadMKV);
+		}
+		
+		private function downloadMKV(e:MouseEvent) {
+			var fr:FileReference = new FileReference();
+			fr.save(mkvVideo.mkvFileBuffer, "myDownloadedFile.mkv");
+		}
+		
 	}
 	
 }
