@@ -48,7 +48,7 @@
 			flvBuffer.writeByte(0x4C);
 			flvBuffer.writeByte(0x56);
 			flvBuffer.writeByte(0x01);
-			flvBuffer.writeByte(0x05);
+			flvBuffer.writeByte(0x01);
 			//Video+Audio;
 			flvBuffer.writeUnsignedInt(0x00000009);
 			flvBuffer.writeUnsignedInt(0x00000000);
