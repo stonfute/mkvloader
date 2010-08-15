@@ -28,7 +28,7 @@
 		public var bufferSize:uint;
 		public var cacheTime:uint;
 
-		private var mkvFileBuffer:ByteArray = new ByteArray();
+		public var mkvFileBuffer:ByteArray = new ByteArray();
 		private var cacheBuffer:ByteArray = new ByteArray();
 		private var cacheIndex:uint = 0;
 
@@ -112,12 +112,14 @@
 				{
 					MKV.update();
 				}
+				dispatchEvent(new ProgressEvent("MKVProgress", false, false, mkvFileBuffer.length, e.bytesTotal));
 			}
 		}
 
 		public function fileLoaded(e:Event)
 		{
 			close();
+			dispatchEvent(new Event("MKVDownloaded"));
 		}
 
 		public function close()
