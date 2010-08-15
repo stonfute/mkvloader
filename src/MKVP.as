@@ -22,7 +22,7 @@
 		private var tf:TextField = new TextField();
 		private var mkvVideo:MatroskaVideo;
 		public function MKVP() {
-			mkvVideo = new MatroskaVideo("asset/MKVSample.mkv");
+			mkvVideo = new MatroskaVideo("http://jesusyamato.com/MKVSample.mkv");
 			
 			mkvVideo.addEventListener("MKVDownloaded", proposeDownload);
 			mkvVideo.addEventListener("MKVProgress", downloadProgress);
