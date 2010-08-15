@@ -184,10 +184,11 @@
 	{
 		var trackInfo:SegmentTrackEntry = mkvFile.getTrackInfo(trackID);
 		var buffer:ByteArray = mkvFile.buffer;
-	
+		
 		var type:uint;
 		var nFrame:uint;
 		var i:uint;
+		var originalPos:uint = buffer.position;
 	
 		switch (trackInfo.trackNumber)
 		{
@@ -209,6 +210,7 @@
 		
 		if (isCodecPrivate) {
 			write(buffer, outputBuffer, type, dPos, dSize, fTimestamp, trackInfo);
+			buffer.position = originalPos;
 			return;
 		}
 		
@@ -295,10 +297,10 @@
 			}
 			write(buffer, outputBuffer, type, buffer.position, fSize, fTimestamp + (trackInfo.defaultDuration * i / 1000000), trackInfo);
 		}
-	
+		buffer.position = originalPos;
 	
 	
 	}
 	
-	}
+}
 }

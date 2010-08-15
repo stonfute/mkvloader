@@ -17,9 +17,12 @@
 	public class MatroskaVideo extends Video
 	{
 
-		public static const BUFFERSIZE:uint = 395264;
-		public static const CACHETIME:uint = 20;
-
+		public static const BUFFERSIZE:uint = 1024*256;
+		
+		//seems to be the most correct cache time for minimum cpu usage/no lag during playback for 720p mkv
+		public static const CACHETIME:uint = 5;
+		private var cacheTimer:Timer = new Timer(2000);
+		
 		public var url:String;
 
 		public var bufferSize:uint;
@@ -36,12 +39,12 @@
 		private var nc:NetConnection = new NetConnection();
 		private var ns:NetStream;
 
-		private var cacheTimer:Timer = new Timer(2000);
+		
 
 
 		public function MatroskaVideo(url:String, cacheTime:uint = CACHETIME, bufferSize:uint = BUFFERSIZE)
 		{
-			super(1920,1080);
+			super(640,480);
 			this.url = url;
 			this.bufferSize = bufferSize;
 			this.cacheTime = cacheTime;
@@ -74,14 +77,13 @@
 
 		private function fillBuffer(e:TimerEvent):void
 		{
-			System.gc();
+
 			if (ns.bufferLength < cacheTime / 2)
 			{
+				
 				for (var i:uint = cacheIndex; i < MKV.index.length; i++)
 				{
-					if (ns.bufferLength >= cacheTime)
-					{
-						System.gc();
+					if (ns.bufferLength >= cacheTime) {
 						break;
 					}
 					MKV.index[cacheIndex].flvInsert(MKV, cacheBuffer);
@@ -110,7 +112,6 @@
 				{
 					MKV.update();
 				}
-				System.gc();
 			}
 		}
 

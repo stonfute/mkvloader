@@ -19,9 +19,12 @@
 	public class MKVP extends MovieClip {
 		
 		public function MKVP() {
-			var mkvVideo:MatroskaVideo = new MatroskaVideo("http://jesusyamato.com/derp.txt");
+			var mkvVideo:MatroskaVideo = new MatroskaVideo("asset/MKVSample.mkv");
 			mkvVideo.loadVideo();
+			//mkvVideo.smoothing = true; //Do this only if you're scaling!
 			addChild(mkvVideo);
+			mkvVideo.width = 640;
+			mkvVideo.height = 480;
 		}
 	}
 	
