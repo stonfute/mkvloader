@@ -31,6 +31,7 @@
 			Process Children
 			*/
 			
+			var firstClusterIndex:uint = MKV.index.length;
 
 			while (readData != dataSize)
 			{
@@ -86,10 +87,38 @@
 						ptr.position +=  cTagSize;
 						break;
 				}
-
+				
 				readData +=  ptr.position - initialPos;
 
 			}
+			
+			//Inject correct DTS - non optimized
+			var i:uint;
+			while (1) {
+				var diff:uint = 0;
+				for (i = firstClusterIndex; i < MKV.index.length - 1; i++) {
+					if (MKV.index[i].trackID != MKV.currentVideoTrack)
+						continue;
+					var orig:uint = i;
+					
+					while (i+1 < MKV.index.length) {
+						if (MKV.index[i+1].trackID == MKV.currentVideoTrack){
+							if (MKV.index[orig].fdTimestamp > MKV.index[i+1].fdTimestamp) {
+								var tmp:uint = MKV.index[orig].fdTimestamp;
+								MKV.index[orig].fdTimestamp = MKV.index[i+1].fdTimestamp;
+								MKV.index[i+1].fdTimestamp = tmp;
+								diff++;
+							}
+							break;
+						}
+						i++
+					}
+					
+				}
+				if (diff == 0)
+					break;
+			}
+
 		}
 	}
 

@@ -7,11 +7,12 @@
 	
 	
 	private var lacingType:uint;
-	private var trackID:uint;
+	public var trackID:uint;
 	private var isKey:Boolean = false;
 	private var dPos:uint;
 	private var dSize:uint;
-	private var fTimestamp:uint;//First frame timestamp, in case of lacing, will increment by default_duration of this track
+	public var fTimestamp:uint;//pts
+	public var fdTimestamp:uint;//dts
 	private var isCodecPrivate:Boolean = false;
 	
 	private var frameSize:Vector.<uint >  = new Vector.<uint >   ;
@@ -22,6 +23,7 @@
 		this.dPos = dPos;
 		this.dSize = dSize;
 		this.fTimestamp = fTimestamp;
+		this.fdTimestamp = fTimestamp;
 		this.isKey = isKey;
 		this.lacingType = lacingType;
 		this.isCodecPrivate = isCodecPrivate;
@@ -86,7 +88,7 @@
 							
 						bodySize++;
 						
-						flvBuffer.writeUnsignedInt(0); flvBuffer.position--; bodySize +=  3;
+						flvBuffer.writeUnsignedInt(((fTimestamp - fdTimestamp)<<8)); flvBuffer.position--; bodySize +=  3;
 						
 						if (compAlgo == 3) { //Header Stripped
 							flvBuffer.writeBytes(inputBuffer, extraStart, extraLen);
@@ -295,7 +297,7 @@
 			{
 				fSize = frameSize[i];
 			}
-			write(buffer, outputBuffer, type, buffer.position, fSize, fTimestamp + (trackInfo.defaultDuration * i / 1000000), trackInfo);
+			write(buffer, outputBuffer, type, buffer.position, fSize, fdTimestamp + (trackInfo.defaultDuration * i / 1000000), trackInfo);
 		}
 		buffer.position = originalPos;
 	
